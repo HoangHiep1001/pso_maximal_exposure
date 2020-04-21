@@ -2,7 +2,7 @@ package main.java.model;
 
 public class Sensor {
     public Point point;
-    private double r;
+    static double r;
 
     public Sensor(Point point, double r) {
         this.point = point;
