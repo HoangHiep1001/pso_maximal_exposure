@@ -10,7 +10,7 @@ import java.io.*;
 
 public class PSO_Search {
     // So ca the cua quan the
-    public static final int POPNUM = 200;
+    public static final int NUMPO = 200;
     // So luong the he
     public static final int PSOINTER = 200;
     // he so quan tinh w
@@ -19,26 +19,24 @@ public class PSO_Search {
     public static final double C1 = 0.5;
     // he so van toc theo doi tuong lon nhat
     public static final double C2 = 0.5;
-    public static final int SOCATHE = POPNUM;
+    public static final int SOCATHE = 200;
     // Quan the
     public Individual[] population;
     public static double speed = 20, limitTime = 100, limitS = speed * limitTime;
     public static int N;
     public static double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
-
     public Random rand = new Random();
     public Objective ob;
     public Point[] ketqua;
     public double maxEP;
 
     // khoi tao sensor
-    public void init() {
+    public void readData() {
 //		speed = 5.0;
 //		limitTime = 100.0;
         ArrayList<Sensor> list = new ArrayList<Sensor>();
         String filename = "E:\\Documents\\20192\\EvoComputation\\pso_maximal_exposure\\src\\main\\java\\pso_search\\test.txt";
         List<String> lines = new ArrayList<String>();
-
         BufferedReader input = null;
         try {
             input = new BufferedReader(new FileReader(filename));
@@ -65,7 +63,6 @@ public class PSO_Search {
         for (int i = 0; i < N; i++) {
             String line = lines.get(i + 1);
             String[] parts = line.split("\\s+");
-
             x11 = Double.parseDouble(parts[0]);
             y11 = Double.parseDouble(parts[1]);
             r11 = Double.parseDouble(parts[2]);
@@ -81,43 +78,30 @@ public class PSO_Search {
         String[] parts2 = line2.split("\\s+");
         x2 = Double.parseDouble(parts2[0]);
         y2 = Double.parseDouble(parts2[1]);
-
         System.out.println("x1 = " + x1 + ", y1 = " + y1);
         System.out.println("x2 = " + x2 + ", y2 = " + y2);
-
     }
-
     // Khoi tao quan the
-    private Individual[] InitSolution() {
-        Individual[] ps = new Individual[POPNUM];
+    public Individual[] InitSolution() {
+        Individual[] ps = new Individual[NUMPO];
         int i = 0;
         int k = 0;
-        for (k = 0; k < POPNUM; k++) {
+        for (k = 0; k < NUMPO; k++) {
             ps[i++] = new Individual(ob, ob.initNormal(ob.H * rand.nextDouble(), 0, ob.H));
-
             System.out.printf("Ca the thu %d duoc khoi tao \n ", i); // **//
-//			System.out.println("Mep = " + ps[k].getObjective());
+			System.out.println("Mep = " + ps[k].getObjective());
         }
-
         return ps;
     }
-
-
     private void searchPSO(int iter) {
-        long start = System.currentTimeMillis();
-        init();
-        System.out.println("Start init tttttmmmmmmmmm");
-        System.out.println("Bước 1:  khởi tạo quần thể: ");
+        readData();
         population = InitSolution(); // khoi tao quan the
-
+        System.out.println("===========khoi tao quan the xong!!!===========");
         Pbest[] Pbest = new Pbest[SOCATHE];
-
         for (int i = 0; i < SOCATHE; i++) {
             Pbest[i] = new Pbest();
         }
-
         Pbest Gbest = new Pbest();
-
         // Khoi tao Pbest
         for (int i = 0; i < SOCATHE; i++) {
             Pbest[i].point = population[i].Points();
@@ -127,7 +111,7 @@ public class PSO_Search {
         // Tim Gbest trong tat ca cac Pbest
         int xacDinhCaTheGbest = 0;
         for (int a = 1; a < SOCATHE; a++) {
-            if (Pbest[xacDinhCaTheGbest].Objective > Pbest[a].Objective) {
+            if (Pbest[xacDinhCaTheGbest].Objective < Pbest[a].Objective) {
                 xacDinhCaTheGbest = a;
             }
         }
@@ -146,8 +130,8 @@ public class PSO_Search {
                     double v_t1i = W * population[k].getGene(j).v + C1 * r1 * (Pbest[k].point[j].y - y_ti)
                             + C2 * r2 * (Gbest.point[j].y - y_ti);
                     double y_t1i = y_ti + v_t1i;
-                    if (y_t1i > 0 && y_t1i < ob.H)
-                        population[k].setGene(j, new Gene(population[k].getGene(j).x, y_t1i, ob));
+                    if(y_t1i >0 && y_t1i<ob.H)
+                        population[k].setGene(j, new Gene(population[k].getGene(j).x, y_t1i,ob));
                     population[k].genes[j].v = v_t1i;
                     vanToc.add(v_t1i);
                 }
@@ -163,27 +147,25 @@ public class PSO_Search {
             // Xac dinh lai ca the Gbest
             xacDinhCaTheGbest = 0;
             for (int a = 1; a < SOCATHE; a++) {
-                if (Pbest[xacDinhCaTheGbest].Objective < Pbest[a].Objective && a != POPNUM - 1 && a != POPNUM - 2) {
+                if (Pbest[xacDinhCaTheGbest].Objective < Pbest[a].Objective && a!=NUMPO-1 && a!= NUMPO-2) {
                     xacDinhCaTheGbest = a;
                 }
             }
-            System.out.println("The he thu " + theHe + " ca the best la " + Pbest[xacDinhCaTheGbest].Objective);
+            System.out.println("The he thu "+ theHe + " ca the best la " + Pbest[xacDinhCaTheGbest].Objective);
             Gbest = Pbest[xacDinhCaTheGbest];
-        } while (theHe < iter && Gbest.Objective > 0);
-        System.out.println("============ XONG GIAI THUAT PSO ==============");
+        } while (theHe < PSOINTER && Gbest.Objective > 0);
+
+        System.out.println("================ DONE ==================");
+
         this.ketqua = Gbest.point;
         // this.ketqua = population[xacDinhPbestToiNhat].Points();
         this.maxEP = Gbest.Objective;
-        //this.timeEslapse = System.currentTimeMillis() - start;
-        System.out.println("MaximalExposure (PSOSearch) = " + maxEP);
-        //System.out.println("Time: " + timeEslapse);
+        System.out.println("MaximalExposure = " + maxEP);
     }
 
     //@Override
     public Point[] RunAlgo() {
         searchPSO(PSOINTER);
-        population = InitSolution(); // khoi tao quan the
-//		draw(Data.getResultPath("ketqua.png"),population);
         return ketqua;
     }
 

@@ -6,7 +6,7 @@ public class Individual {
 
     protected Objective ob;
     protected Gene[] genes;
-    protected double objective; ///
+    protected double objective;
 
     public Individual(Objective ob, double[] y) { // khoi tao mot ca the
         this.ob = ob;

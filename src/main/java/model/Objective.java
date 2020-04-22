@@ -9,9 +9,9 @@ public class Objective {
     public static ArrayList<Sensor> sensors;
     private static Random random = new Random();
     public final double dt = 1;
-    public final double dx = 0.1;
+    public final double dx = 0.5;
 
-    public final double dy = 0.1;
+    public final double dy = 0.5;
     public final double randMax = 1.3;
     public int nbSegmentX;
     public int nbSegmentY;
@@ -30,19 +30,18 @@ public class Objective {
         xk[0] = 0;
         yk[0] = 0;
         for (int i = 1; i < xk.length; i++)
-            xk[i] = xk[i - 1] + dx; // cập nhật vị trí của x
+            xk[i] = xk[i - 1] + dx;
         for (int i = 1; i < yk.length; i++)
-            yk[i] = yk[i - 1] + dy; // cập nhật vị trí của y
+            yk[i] = yk[i - 1] + dy;
     }
 
     public double Sensor_Point(Sensor s, double x, double y) {
-        double dx = x - s.point.x; //
+        double dx = x - s.point.x;
         double dy = y - s.point.y;
         double d = Math.sqrt(dx * dx + dy * dy);
         return d > Sensor.r ? 0 : 1;
     }
-
-    // Hàm này trả về tổng cường độ cảm ứng của tất cả các sensor lên 1 điểm
+    // tổng cường độ cảm ứng của tất cả các sensor lên 1 điểm
     public double getIP(double x, double y) {
         double value = 0;
         for (int i = 0; i < sensors.size(); i++)
@@ -50,7 +49,7 @@ public class Objective {
         return value;
     }
 
-    public double[] initNormal(double ys0, double min, double max) {        //tao mang ngau nhien
+    public double[] initNormal(double ys0, double min, double max) {
         double[] ys = new double[xk.length];
         ys[0] = ys0;
         for (int i = 1; i < ys.length; i++) {
