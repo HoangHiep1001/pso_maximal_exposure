@@ -1,15 +1,15 @@
 package model;
 
 public class Sensor {
-	public Point p, pt; // p la 1 điểm tâm, pt trọng tâm của vonoi
-	public double Viangle; // hướng của sensor
+	public Point p; // p la 1 điểm tâm, pt trọng tâm của vonoi
+//	public double Viangle; // hướng của sensor
 	public static double r;
-	public static double angle;
-
-	public static double gamma = 1;
-	public static double beta = 1;
-	public static double nuy = 1;
-	
+//	public static double angle;
+//
+//	public static double gamma = 1;
+//	public static double beta = 1;
+//	public static double nuy = 1;
+//	
 	
 	public Sensor(Point p, double r) {
 		this.p = p;

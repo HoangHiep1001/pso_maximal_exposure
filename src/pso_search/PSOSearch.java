@@ -56,6 +56,7 @@ public class PSOSearch {
 //		limitTime = 100.0;
 //		ArrayList<Obstace> lobs = new ArrayList<Obstace>();
 //		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+		this.ob = new Objective(Objective.sensors, ob.W, ob.H);
 		String filename = "C:\\Users\\20161\\Desktop\\BTL_TTTH\\src\\M_ExposurePath\\test.txt";
 		List<String> lines = new ArrayList<String>();
 
@@ -118,19 +119,19 @@ public class PSOSearch {
 		int i = 0;
 		int k=0;
 		for (k = 0; k < POPNUM; k++) { 
-			double[] resy = ob.initNormal(ob.H * rand.nextDouble(), 0, ob.H);
+//			double[] resy = ob.initNormal(ob.H * rand.nextDouble(), 0, ob.H);
 			ps[i++] = new Individual(ob, ob.initNormal(ob.H * rand.nextDouble(), 0, ob.H));
 
 			System.out.printf("Ca the thu %d duoc khoi tao \n ", i); // **//
 //			System.out.println("Mep = " + ps[k].getObjective());
 		}
-
+		
 		return ps;
 	}
 	
 	
 	private void searchPSO(int iter) {
-		long start = System.currentTimeMillis();
+//		long start = System.currentTimeMillis();
 		init();
 		System.out.println("Start init tttttmmmmmmmmm");
 		System.out.println("Bước 1:  khởi tạo quần thể: ");
@@ -154,7 +155,8 @@ public class PSOSearch {
 		// Tim Gbest trong tat ca cac Pbest
 		int xacDinhCaTheGbest = 0;
 		for (int a = 1; a < SOCATHE; a++) {
-			if (Pbest[xacDinhCaTheGbest].Objective > Pbest[a].Objective) {
+//			System.out.println(" Pbest[a].Objective = " + Pbest[a].Objective);
+			if (Pbest[xacDinhCaTheGbest].Objective < Pbest[a].Objective) {
 				xacDinhCaTheGbest = a;
 			}
 		}
@@ -187,12 +189,14 @@ public class PSOSearch {
 	
 					vanToc.add(v_t1i);
 				}
+				
 				for (int j = 0; j < population[0].getSize(); j++) {
 					population[k].genes[j].v = vanToc.get(j);
 				}
+				
 				vanToc.clear();
 
-				if (Pbest[k].Objective > population[k].tinhHamMucTieuChoCaThe()) { //xac dinh Pbest
+				if (Pbest[k].Objective < population[k].tinhHamMucTieuChoCaThe()) { //xac dinh Pbest
 					Pbest[k].point = population[k].Points();
 					Pbest[k].Objective = population[k].tinhHamMucTieuChoCaThe();
 				}

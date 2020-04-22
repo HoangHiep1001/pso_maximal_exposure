@@ -43,6 +43,7 @@ public class Individual {
 		t11 = Objective.dx/PSOSearch.speed;
 		
 		if( timeM < 0 ) return 0;
+//		System.out.println("timeM = "+ timeM);
 		
 		double res = 0, tempp = 0, tmax = 0;
 		

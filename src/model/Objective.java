@@ -7,7 +7,7 @@ public class Objective {
 	// Kich thuoc vung
 	public static double W = 100, H = 100;
 	public static ArrayList<Sensor> sensors = new ArrayList<Sensor>();
-	public ArrayList<Obstace> obstaces; // don't care
+//	public ArrayList<Obstace> obstaces; // don't care
 
 	// For init
 	private static Random r = new Random();
@@ -21,9 +21,9 @@ public class Objective {
 	public double[] xk;
 	public double[] yk;
 
-	public Objective(ArrayList<Sensor> sensors, ArrayList<Obstace> obs, int width, int height) {
+	public Objective(ArrayList<Sensor> sensors, double width, double height) {
 //		this.sensors = new ArrayList<Sensor>();
-		this.obstaces = obs;
+//		this.obstaces = obs;
 		this.sensors = sensors;
 		this.W = width;
 		this.H = height;
@@ -70,6 +70,8 @@ public class Objective {
 			delta_y--;
 			y1 += step;
 		}
+		
+		value = this.getIP(x2, y2);
 		
 		//value += getIP(x1, y1) * Math.sqrt(delta_x * delta_x + delta_y * delta_y);
 		return value;
