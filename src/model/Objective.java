@@ -28,7 +28,6 @@ public class Objective {
 		this.W = width;
 		this.H = height;
 		this.nbSegmentX = (int) (width / dx); // số điểm chia ra trên khu vực
-												// theo chiều dài
 		this.nbSegmentY = (int) (height / dy); // số điểm chia ra tẻe
 		this.xk = new double[nbSegmentX];
 		this.yk = new double[nbSegmentY];
@@ -39,7 +38,6 @@ public class Objective {
 		for (int i = 1; i < yk.length; i++)
 			yk[i] = yk[i - 1] + dy; // cập nhật vị trí của y
 	}
-
 	public double Sensor_Point(Sensor s, double x, double y) {
 		double dx = x - s.p.x; //
 		double dy = y - s.p.y;
@@ -47,7 +45,6 @@ public class Objective {
 		double d = Math.sqrt(dx * dx + dy * dy);
 		return (d > Sensor.r) ? 0 : 1;
 	}
-
 	// Hàm này trả về tổng cường độ cảm ứng của tất cả các sensor lên 1 điểm
 	public double getIP(double x, double y) {
 		double value = 0;
@@ -55,7 +52,6 @@ public class Objective {
 			value = value + Sensor_Point(sensors.get(i), x, y);
 		return value;
 	}
-	
 	public double getIP(double x1, double y1, double x2, double y2) {
 		if (y1 < 0 || y1 > H || y2 < 0 || y2 > H)
 			return -10000;
@@ -63,20 +59,16 @@ public class Objective {
 		double delta_y = Math.abs(y2 - y1);
 		double value = 0;
 		double step = y2 < y1 ? -1 : 1;
-		
-		
 		while (delta_y >= 1) {
 			value += getIP(x1, y1);
 			delta_y--;
 			y1 += step;
 		}
-		
 		value = this.getIP(x2, y2);
 		
 		//value += getIP(x1, y1) * Math.sqrt(delta_x * delta_x + delta_y * delta_y);
 		return value;
 	}
-
 	public double[] initNormal(double ys0, double min, double max) {		//tao mang ngau nhien
 		double[] ys = new double[xk.length];
 		ys[0] = ys0;
@@ -98,7 +90,6 @@ public class Objective {
 		}
 		return ys;
 	}
-	
     public double[] initHeuristic(double ys0,double start,double end) {		//khoi tao ca the
 		double[] ys = new double[xk.length];
 		ys[0] = ys0;
@@ -123,15 +114,9 @@ public class Objective {
                     min2 = dy;
                     index = j;
                 }
-            
             }
             ys[i] = yk[index];
         }
 			return ys;
-	}	
-	
-	
-	
-	
-	
+	}
 }

@@ -11,17 +11,12 @@ import pso_search.Individual;
 import java.util.*;
 import java.io.*;
 
-//import M_ExposurePath.Sensor;
-//import algorithm.Algothirm;
-
 public class PSOSearch {
 	// So ca the cua quan the
 	public static final int POPNUM = 200;
 	public static final int SOLANCHAY = 20;
-
 	// So luong the he
 	public static final int PSOINTER = 200;
-
 	// he so quan tinh w
 	public static final double W = 0.3;
 	// he so van toc theo maxGene
@@ -34,9 +29,7 @@ public class PSOSearch {
 	public static final int SOCATHE = POPNUM;
 	// Quan the
 	public Individual[] population;
-
 	// cac rang buoc (moi them - dlg)
-	
 	public static double speed = 20, limitTime = 100, limitS = speed * limitTime;
 	public static int N;
 	public static double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
@@ -45,10 +38,6 @@ public class PSOSearch {
 	public Objective ob;
 	public Point[] ketqua;
 	public double maxEP;
-	
-//	public PSOSearch() {
-//		this.Objective.sensors = new ArrayList<Sensor>();
-//	}
 	
 	// khoi tao sensor
 	public void init() {		
@@ -121,14 +110,11 @@ public class PSOSearch {
 		for (k = 0; k < POPNUM; k++) { 
 //			double[] resy = ob.initNormal(ob.H * rand.nextDouble(), 0, ob.H);
 			ps[i++] = new Individual(ob, ob.initNormal(ob.H * rand.nextDouble(), 0, ob.H));
-
 			System.out.printf("Ca the thu %d duoc khoi tao \n ", i); // **//
 //			System.out.println("Mep = " + ps[k].getObjective());
 		}
-		
 		return ps;
 	}
-	
 	
 	private void searchPSO(int iter) {
 //		long start = System.currentTimeMillis();
@@ -142,9 +128,7 @@ public class PSOSearch {
 		for (int i = 0; i < SOCATHE; i++) {
 			Pbest[i] = new PbestClass();
 		}
-
 		PbestClass Gbest = new PbestClass();
-
 		// Khoi tao Pbest
 		for (int i = 0; i < SOCATHE; i++) {
 			Pbest[i].point = population[i].Points();
@@ -160,7 +144,6 @@ public class PSOSearch {
 				xacDinhCaTheGbest = a;
 			}
 		}
-		
 		Gbest = Pbest[xacDinhCaTheGbest];
 	
 		int xacDinhPbestToiNhat = 0;
