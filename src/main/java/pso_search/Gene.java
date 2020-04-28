@@ -13,7 +13,6 @@ public class Gene extends Point {
     }
     public Gene(double x, double y,Objective ob) {
         super(x, y);
-        this.exposure = 0;
         this.v = 0;
         this.exposure = ob.getIP(x,y);
     }

@@ -5,12 +5,11 @@ import java.util.Random;
 
 public class Objective {
     // Kich thuoc vung
-    public int W, H;
+    public int W = 100, H = 100;
     public static ArrayList<Sensor> sensors;
     private static Random random = new Random();
     public final double dt = 1;
     public final double dx = 0.5;
-
     public final double dy = 0.5;
     public final double randMax = 1.3;
     public int nbSegmentX;
@@ -18,13 +17,10 @@ public class Objective {
     public double[] xk;
     public double[] yk;
 
-    public Objective(ArrayList<Sensor> sensors, int width, int height) {
+    public Objective(ArrayList<Sensor> sensors) {
         this.sensors = sensors;
-        this.W = width;
-        this.H = height;
-        this.nbSegmentX = (int) (width / dx); // số điểm chia ra trên khu vực
-        // theo chiều dài
-        this.nbSegmentY = (int) (height / dy); // số điểm chia ra theo chieu doc
+        this.nbSegmentX = (int) (W / dx); // số điểm chia ra theo chieu dai
+        this.nbSegmentY = (int) (H / dy); // số điểm chia ra theo chieu doc
         this.xk = new double[nbSegmentX];
         this.yk = new double[nbSegmentY];
         xk[0] = 0;
@@ -61,7 +57,7 @@ public class Objective {
     }
     public double getIP(double x1, double y1, double x2, double y2) {
         if (y1 < 0 || y1 > H || y2 < 0 || y2 > H)
-            return 10000;
+            return -10000;
         double delta_x = x2 - x1;
         double delta_y = Math.abs(y2 - y1);
         double value = 0;

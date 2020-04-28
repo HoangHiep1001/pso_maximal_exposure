@@ -9,15 +9,11 @@ public class Objective {
 	// Kich thuoc vung
 	public static double W = 100, H = 100;
 	public static ArrayList<Sensor> sensors = new ArrayList<Sensor>();
-//	public ArrayList<Obstace> obstaces; // don't care
-
-	// For init
 	private static Random r = new Random();
-//	public final double dx = 0.1;
 	public final static double dx = 0.5;
 
 	public final static double dy = 0.5;
-	public final double randMax = 1.3;
+	public final double randMax = 4;
 	public int nbSegmentX;
 	public int nbSegmentY;
 	public double[] xk;
@@ -121,8 +117,6 @@ public class Objective {
 				ys[i] = ys[i - 1] + (r.nextDouble() * 2 * randMax - randMax);
 			} while (ys[i] < min || ys[i] > max);
 		}
-		
-//		ys[ys.length - 1] = ys1;
 		return ys;
 	}
 	

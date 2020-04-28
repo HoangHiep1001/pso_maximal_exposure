@@ -19,8 +19,5 @@ public class Gene extends Point {
 		this.ip = ob.getIP(x, y, x1, y1);
 		this.v = 0;
 	}
-//	public void setV(double v){
-//		this.v = v;
-//	}
 	
 }

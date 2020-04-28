@@ -22,8 +22,6 @@ public class Objective {
 	public double[] yk;
 
 	public Objective(ArrayList<Sensor> sensors, double width, double height) {
-//		this.sensors = new ArrayList<Sensor>();
-//		this.obstaces = obs;
 		this.sensors = sensors;
 		this.W = width;
 		this.H = height;
