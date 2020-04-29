@@ -20,11 +20,11 @@ public class PSOSearch {
 	
 	// ( can thay doi 3 he so nay )
 	// he so quan tinh w
-	public static final double W = 0.3;
+	public static final double C = 0.3;
 	// he so van toc theo maxGene
 	public static final double C1 = 0.5;
 	// he so van toc theo doi tuong lon nhat
-	public static final double C2 = 0.8;
+	public static final double C2 = 0.5;
 
 	public static final int SOCATHE = POPNUM;
 	// Quan the
@@ -115,16 +115,16 @@ public class PSOSearch {
 		for (k = 0; k < POPNUM; k++) { 
 //			ps[i++] = new Individual(ob, ob.initNormal(ob.H * rand.nextDouble(), 0, ob.H));
 			ps[i++] = new Individual(ob);
-			System.out.printf("Ca the thu %d duoc khoi tao \n ", i); // **//
+//			System.out.printf("Ca the thu %d duoc khoi tao \n ", i); 
 //			System.out.println("Mep = " + ps[k].getObjective());
 		}
 		
+		System.out.printf("XONG KHOI TAO CA THE");
 		return ps;
 	}
 	
-	
 	private void searchPSO(int iter) {
-//		long start = System.currentTimeMillis();
+
 		init();
 		System.out.println("Start init tttttmmmmmmmmm");
 		System.out.println("Buoc 1: Khoi tao quan the ");
@@ -157,7 +157,7 @@ public class PSOSearch {
 		
 		Gbest = Pbest[xacDinhCaTheGbest];
 	
-		int xacDinhPbestToiNhat = 0;
+//		int xacDinhPbestToiNhat = 0;
 		int theHe = 0;
 		ArrayList<Double> vanToc = new ArrayList<>();
 		do {
@@ -170,21 +170,24 @@ public class PSOSearch {
 
 				for (int j = 0; j < population[0].getSize(); j++) {
 					
-					double y_ti = population[k].getGene(j).y;
+					double x_ti = population[k].getGene(j).y;
 
-					double v_t1i = W * population[k].getGene(j).v + C1 * r1 * (Pbest[k].point[j].y - y_ti)
-							+ C2 * r2 * (Gbest.point[j].y - y_ti);
-					double y_t1i = y_ti + v_t1i;
+					double v_t1i = C * population[k].getGene(j).v + C1 * r1 * (Pbest[k].point[j].x - x_ti) + C2 * r2 * (Gbest.point[j].x - x_ti);
+					double x_t1i = x_ti + v_t1i;
 					
-					if(y_t1i >0 && y_t1i<ob.H)
-						population[k].setGene(j, new Gene(population[k].getGene(j).x, y_t1i,ob));
-					
+					if(x_t1i >0 && x_t1i<ob.W) {
+						population[k].setGene(j, new Gene(x_t1i, population[k].getGene(j).y, ob));
+					}
+						
 					population[k].genes[j].v = v_t1i;
 					
 					if(j == 0) v_t1i = 0;
 					if(j == population[0].getSize() - 1) v_t1i = 0;
 					
 					vanToc.add(v_t1i);
+//					if(j == 0) {
+//						System.out.println("van toc la " + v_t1i);
+//					}
 				}
 				
 				for (int j = 0; j < population[0].getSize(); j++) {
@@ -220,13 +223,69 @@ public class PSOSearch {
 	
 	public Point[] RunAlgo() {
 		searchPSO(PSOINTER);
-//		draw(Data.getResultPath("ketqua.png"),population);	
 		return ketqua;
 	}
 
-	
+//	public void InitRandom() throws IOException {
+//		final Random R = new Random();
+//		PrintWriter writer1 = null;
+//		// double c = 1.2;
+//		writer1 = new PrintWriter(new File("C:\\Users\\giang.dl161164\\Desktop\\BTL_TTTH_PSO\\output\\output.txt"));
+//		for(int i = 0; i < ketqua.length; i++) {
+//			
+//			
+//			
+//		}	
+//		writer1.write(N + "\n");
+//		for (int i = 0; i < N; i++) {
+//			double x11 = 200, y11 = 100, r11 = Rmax;
+//
+//			while (x11 >= wOfField && y11 >= hOfField) {
+//				x11 = R.nextDouble() + R.nextInt((int) wOfField);
+//				y11 = R.nextDouble() + R.nextInt((int) hOfField);
+//				r11 = R.nextDouble() + R.nextInt((int) Rmax);
+//			}
+//
+//			Sensor sensor1 = new Sensor(x11, y11, r11);
+//			writer1.write(x11 + " " + y11 + " " + r11 + "\n");
+//			
+//		}
+//
+//		double temp1 = wOfField, temp2 = wOfField;
+//
+//		while (temp1 >= wOfField && temp2 >= wOfField) {
+//			temp1 = R.nextDouble() + R.nextInt((int) wOfField);
+//			temp2 = R.nextDouble() + R.nextInt((int) wOfField);
+//
+//		}
+//
+//		double a_temp = 0, b_temp = a_temp + deltaS;
+//		int check1 = 1, check2 = 1;
+//		for (int i = 0; i < wOfField; i++) {
+//			if (temp1 >= a_temp && temp1 <= b_temp) {
+//				x1 = (Math.abs(temp1 - a_temp) >= Math.abs(temp1 - b_temp)) ? b_temp : a_temp;
+//				check1 = 0;
+//			}
+//			if (temp2 >= a_temp && temp2 <= b_temp) {
+//				x2 = (Math.abs(temp2 - a_temp) >= Math.abs(temp2 - b_temp)) ? b_temp : a_temp;
+//				check2 = 0;
+//			}
+//			a_temp = b_temp;
+//			b_temp = b_temp + deltaS;
+//			if (check1 == 0 && check2 == 0)
+//				break;
+//		}
+//
+//		double x8 = 0;
+//		writer1.write(x1 + " " + x8 + "\n");
+//		writer1.write(x2 + " " + hOfField);
+//
+//		writer1.flush();
+//		writer1.close();
+//
+//	}
+//	}
 	public static void main(String[] args) {
-//		PSOSearch g = new PSOSearch();
 		PSOSearch app = new PSOSearch();
 //		app.init();
 		app.RunAlgo();

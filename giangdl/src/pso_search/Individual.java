@@ -1,7 +1,7 @@
 package pso_search;
 
 import java.util.Random;
-
+import java.lang.*;
 import model.Objective;
 import model.Point;
 
@@ -15,17 +15,17 @@ public class Individual {
 	// khoi tao mot ca the
 	public Individual(Objective ob) { 
 		this.ob = ob;
-		this.genes = new Gene[ob.yk.length];
+		this.genes = new Gene[ob.xk.length];
 		
 		Random r = new Random();
 		double randMax = 1.3;
-		ob.yk[0] = PSOSearch.y1;
+		ob.xk[0] = PSOSearch.x1;
 		int kk = 0, checkk = 0;
 		double a, b;
-		for (int i = 1; i < ob.yk.length-1; i++) {
+		for (int i = 1; i < ob.xk.length-1; i++) {
 			double rex, rey, ress, ress1 = 0;
 			do {
-				ob.yk[i] = ob.yk[i - 1] + (r.nextDouble() * 2 * randMax - randMax);
+				ob.xk[i] = ob.xk[i - 1] + (r.nextDouble() * 2 * randMax - randMax);
 				rex = PSOSearch.x2 - ob.xk[i];
 				rey = PSOSearch.y2 - ob.yk[i];
 				ress = Math.sqrt(rex * rex + rey * rey);
@@ -45,7 +45,7 @@ public class Individual {
 				
 				if(checkk == 1) break;
 				
-			} while (ob.yk[i] < 0 || ob.yk[i] > ob.H);
+			} while (ob.xk[i] < 0 || ob.xk[i] > ob.W);
 		}
 		
 		if(checkk == 1 ) {
@@ -53,16 +53,16 @@ public class Individual {
 			b = PSOSearch.y2 - PSOSearch.x2 * a;
 			
 			for(int i = kk; i < ob.yk.length - 1; i++) {
-				ob.yk[i] = a*ob.xk[i] + b;
+				ob.xk[i] = (ob.yk[i] - b)/a;
 			}
 		}
 		
-		ob.yk[ob.yk.length - 1] = PSOSearch.y2;
+		ob.xk[ob.xk.length - 1] = PSOSearch.x2;
 		
 		int j=0;
 
-		for (j = 0; j < ob.yk.length-1; j++) {
-			this.genes[j] = new Gene(ob.xk[j], ob.yk[j], ob.xk[j + 1], ob.yk[j + 1], ob);
+		for (j = 0; j < ob.xk.length-1; j++) {
+			this.genes[j] = new Gene(ob.xk[j + 1], ob.yk[j + 1], ob);
 //			System.out.println("toa do la va " + ob.xk[j]);
 		}
 			
@@ -128,19 +128,12 @@ public class Individual {
 	
 	public void setGene(int index, Gene value) {
 		if (index > 0)
-			this.genes[index - 1] = new Gene(this.genes[index - 1].x, this.genes[index - 1].y, value.x, value.y, ob);
+			this.genes[index - 1] = new Gene(value.x, value.y, ob);
 		if (index < this.genes.length - 1)
-			this.genes[index] = new Gene(value.x, value.y, this.genes[index + 1].x, this.genes[index + 1].y, ob);
+			this.genes[index] = new Gene(this.genes[index + 1].x, this.genes[index + 1].y, ob);
 		else
 			this.genes[index] = value;
 	}
 
-	// giong cai tren
-	public double tinhHamMucTieuChoCaThe() {
-		double value = 0;
-//		for (int i = 0; i < genes.length; i++)
-//			value += this.genes[i].ip;
-		value = this.getObjective();
-		return value;
-	}
+
 }
