@@ -46,7 +46,7 @@ public class PSOSearch {
 //		ArrayList<Obstace> lobs = new ArrayList<Obstace>();
 //		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 		this.ob = new Objective(Objective.sensors, ob.W, ob.H);
-		String filename = "C:\\Users\\20161\\Desktop\\BTL_TTTH\\src\\M_ExposurePath\\test.txt";
+		String filename = "./src/main/java/pso_search/test.txt";
 		List<String> lines = new ArrayList<String>();
 
 		BufferedReader input = null;
