@@ -30,7 +30,7 @@ public class PSOSearch {
 
 	// cac rang buoc (moi them - dlg)
 	
-	public static double speed = 20, limitTime = 100, limitS = speed * limitTime;
+	public static double speed = 5, limitTime = 100, limitS = speed * limitTime;
 	public static int N;
 	public static double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
 	
@@ -49,7 +49,7 @@ public class PSOSearch {
 //		limitTime = 100.0;
 
 		this.ob = new Objective(Objective.sensors, ob.W, ob.H);
-		String filename = "C:\\Users\\giang.dl161164\\Desktop\\BTL_TTTH_PSO\\data\\test.txt";
+		String filename = "C:\\Users\\giang.dl161164\\Desktop\\BTL_TTTH_PSO\\data\\200.txt";
 		List<String> lines = new ArrayList<String>();
 
 		BufferedReader input = null;
@@ -121,7 +121,7 @@ public class PSOSearch {
 		return ps;
 	}
 	
-	public void searchPSO(int iter) {
+	public void searchPSO(int iter) throws IOException {
 
 		init();
 		System.out.println("Khoi tao quan the ");
@@ -139,7 +139,7 @@ public class PSOSearch {
 		for (int i = 0; i < SOCATHE; i++) {
 			Pbest[i].point = population[i].Points();
 			Pbest[i].Objective = population[i].getObjective();
-
+			
 		}
 		
 //		for (int i = 0; i < SOCATHE; i++) {
@@ -147,6 +147,24 @@ public class PSOSearch {
 //			System.out.print("("+Pbest[0].point[i].x+", "+Pbest[0].point[i].y+"), ");
 //
 //		}
+		
+		// khoi tao file in ket qua trung gian
+		PrintWriter writer1 = null;
+		
+		writer1 = new PrintWriter(new File("C:\\Users\\giang.dl161164\\Desktop\\BTL_TTTH_PSO\\output\\output_temp_200.txt"));
+		int temppp = PSOINTER + 1;
+		writer1.write(temppp + "\n");
+		writer1.write(SOCATHE + "\n");
+		writer1.write(Pbest[0].point.length + "\n");
+		
+		for (int i = 0; i < SOCATHE; i++) {
+			for(int j = 0; j < Pbest[i].point.length; j++) {
+//				System.out.print("("+Pbest[i].point[j].x+", "+Pbest[i].point[j].y+"), ");
+				writer1.write(Pbest[i].point[j].x + " " + Pbest[i].point[j].y + "\n");
+			}	
+//			System.out.println();
+		}
+		
 		// Tim Gbest
 		// Tim Gbest trong tat ca cac Pbest
 		int xacDinhCaTheGbest = 0;
@@ -183,8 +201,8 @@ public class PSOSearch {
 						
 					population[k].genes[j].v = v_t1i;
 					
-					if(j == 0) v_t1i = 0;
-					if(j == population[0].getSize() - 1) v_t1i = 0;
+//					if(j == 0) v_t1i = 0;
+//					if(j == population[0].getSize() - 1) v_t1i = 0;
 					
 					vanToc.add(v_t1i);
 //					System.out.println("van toc la " + v_t1i);
@@ -214,8 +232,18 @@ public class PSOSearch {
 			}
 			System.out.println("Ca the best la " + Pbest[xacDinhCaTheGbest].Objective);
 			Gbest = Pbest[xacDinhCaTheGbest];
+			
+			// in ket qua temp sau moi the he
+			for (int i = 0; i < SOCATHE; i++) {
+				for(int j = 0; j < Pbest[i].point.length; j++) {
+//					System.out.print("("+ketqua[i].x+", "+ketqua[i].y+"), ");
+					writer1.write(Pbest[i].point[j].x + " " + Pbest[i].point[j].y + "\n");
+				}	
+			}
 		} while (theHe < PSOINTER && Gbest.Objective > 0);
-
+		
+		writer1.flush();
+		writer1.close();
 //		System.out.println("\n");
 
 		this.ketqua = Gbest.point;
@@ -225,16 +253,34 @@ public class PSOSearch {
 		
 	}
 	
-	public Point[] RunAlgo() {
+	public Point[] RunAlgo() throws IOException{
 		searchPSO(PSOINTER);
 		return ketqua;
 	}
-
+	
+//	public void PrintTemp() throws IOException {
+//		PrintWriter writer1 = null;
+//		
+//		writer1 = new PrintWriter(new File("C:\\Users\\giang.dl161164\\Desktop\\BTL_TTTH_PSO\\output\\output_temp.txt"));
+//		writer1.write(ketqua.length + "\n");
+//		
+//		for(int i = 0; i < ketqua.length; i++) {
+//			System.out.print("("+ketqua[i].x+", "+ketqua[i].y+"), ");
+//			writer1.write(ketqua[i].x + " " + ketqua[i].y);
+//			if( i != ketqua.length - 1 ) {
+//				writer1.write("\n");
+//			}
+//		}	
+//		
+//		writer1.flush();
+//		writer1.close();
+//	}
+	
 	public void PrintFile() throws IOException {
 		Random R = new Random();
 		PrintWriter writer1 = null;
 		// double c = 1.2;
-		writer1 = new PrintWriter(new File("C:\\Users\\giang.dl161164\\Desktop\\BTL_TTTH_PSO\\output\\output.txt"));
+		writer1 = new PrintWriter(new File("C:\\Users\\giang.dl161164\\Desktop\\BTL_TTTH_PSO\\output\\output_200.txt"));
 //		writer1.write(x1 + " " + y1 + "\n");
 		writer1.write(ketqua.length + "\n");
 		for(int i = 0; i < ketqua.length; i++) {

@@ -78,34 +78,48 @@ public class Individual {
 		double value = 0;
 		
 		double resS = 0;
-		double resX, resY;
+		double resX, resY, tempS;
+		double[] t11 = new double[size + 1];
+		double t111 = 0;
+		
 		for(int i = 1; i < size; i++) {
 			resX = this.genes[i + begin].x - this.genes[i + begin - 1].x;
 			resY = this.genes[i + begin].y - this.genes[i + begin - 1].y;
-			resS += Math.sqrt(resX * resX + resY * resY);
+			tempS = Math.sqrt(resX * resX + resY * resY);
+			resS += tempS;
+			t11[i] = tempS/PSOSearch.speed;
+			t111 += t11[i];
 		}
 		
-		double t11 = resS/PSOSearch.speed;
-		double timeM = PSOSearch.limitTime - t11;
-		t11 = Objective.dx/PSOSearch.speed;
+//		double t11 = resS/PSOSearch.speed;
+//		double timeM = PSOSearch.limitTime - t11;
+//		t11 = Objective.dx/PSOSearch.speed;
 		
 //		System.out.println("qduong = "+ resS);
 		if( resS > PSOSearch.limitS ) return 0;
 //		System.out.println("timeM = "+ timeM);
 		
-		double res = 0, tempp = 0, tmax = 0;
+		double res = 0, tempp = 0, tmax = 0, kkk = 0;
 		
-		for (int i = 0; i < size; i++) {
+		for (int i = 1; i < size; i++) {
 			tempp = this.genes[i + begin].ip;
 			res += tempp;
 			if( tmax < tempp ) {
 				tmax = tempp;
+				kkk = i;
 			}
 		}
 		
 		double IP = res - tmax;
-		value = IP * t11 + tmax * timeM;
+//		value = IP * t11 + tmax * timeM;
 		
+		for(int i = 1; i < size; i++) {
+			if( i == kkk ) continue;
+			value += this.genes[i + begin].ip * t11[i];
+		}
+		
+		value = value + tmax * (PSOSearch.limitTime - t111);
+				
 		return value;
 	}
 

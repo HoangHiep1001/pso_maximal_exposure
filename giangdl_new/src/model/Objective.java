@@ -12,6 +12,8 @@ public class Objective {
 
 	private static Random r = new Random();
 //	public final double dx = 0.1;
+	
+	// sua dx = dy ( 0.1 -> 0.5 )
 	public final static double dx = 0.1;
 	public final static double dy = 0.1;
 	
