@@ -13,12 +13,12 @@ import java.lang.*;
 
 public class PSOSearch {
 	// So ca the cua quan the
-	public static final int POPNUM = 200;
+	public static final int POPNUM = 5000;
 
 	// So luong the he
 	public static final int PSOINTER = 200;
 	
-	// can thay doi 3 he so nay ( he so quan tinh w - he so van toc theo maxgene, he so van toc theo doi tuong lon nhat
+	// can thay doi 3 he so nay ( he so quan tinh w - he so van toc theo maxgene, he so van toc theo doi tuong lon nhat)
 	
 	public static final double C = 0.3;
 	public static final double C1 = 0.5;
@@ -37,7 +37,9 @@ public class PSOSearch {
 	public Random rand = new Random();
 	public Objective ob;
 	public Point[] ketqua;
-	public double maxEP;
+	public static double maxEP;
+	public static String filename;
+	public static long timeC = 0;
 	
 //	public PSOSearch() {
 //		this.Objective.sensors = new ArrayList<Sensor>();
@@ -47,9 +49,11 @@ public class PSOSearch {
 	public void init() {		
 //		speed = 5.0;
 //		limitTime = 100.0;
-
+		Objective.sensors = new ArrayList<Sensor>();
 		this.ob = new Objective(Objective.sensors, ob.W, ob.H);
-		String filename = "C:\\Users\\giang.dl161164\\Desktop\\BTL_TTTH_PSO\\data\\200.txt";
+		
+//		String filename = "/home/giang/Documents/MEP_PSO/data/200.txt";
+		System.out.println(filename);
 		List<String> lines = new ArrayList<String>();
 
 		BufferedReader input = null;
@@ -103,6 +107,7 @@ public class PSOSearch {
 		
 		System.out.println("x1 = " + x1 + ", y1 = " + y1);
 		System.out.println("x2 = " + x2 + ", y2 = " + y2);
+		System.out.println("so sensor = " + Objective.sensors.size());
 		
 	}
 	// Khoi tao quan the
@@ -111,9 +116,7 @@ public class PSOSearch {
 		int i = 0;
 		int k=0;
 		for (k = 0; k < POPNUM; k++) { 
-//			ps[i++] = new Individual(ob, ob.initNormal(ob.H * rand.nextDouble(), 0, ob.H));
 			ps[i++] = new Individual(ob);
-//			System.out.printf("Ca the thu %d duoc khoi tao \n ", i); 
 //			System.out.println("Mep = " + ps[k].getObjective());
 		}
 		
@@ -122,7 +125,7 @@ public class PSOSearch {
 	}
 	
 	public void searchPSO(int iter) throws IOException {
-
+		long start = System.currentTimeMillis();
 		init();
 		System.out.println("Khoi tao quan the ");
 		population = InitSolution(); 
@@ -151,7 +154,7 @@ public class PSOSearch {
 		// khoi tao file in ket qua trung gian
 		PrintWriter writer1 = null;
 		
-		writer1 = new PrintWriter(new File("C:\\Users\\giang.dl161164\\Desktop\\BTL_TTTH_PSO\\output\\output_temp_200.txt"));
+		writer1 = new PrintWriter(new File("/home/giang/Documents/MEP_PSO/output/output_temp_200.txt"));
 		int temppp = PSOINTER + 1;
 		writer1.write(temppp + "\n");
 		writer1.write(SOCATHE + "\n");
@@ -189,7 +192,9 @@ public class PSOSearch {
 				double r2 = rand.nextDouble();
 
 				for (int j = 0; j < population[0].getSize(); j++) {
-					
+//					if(j != 0 && j != population[0].getSize() - 1 ) {
+//						population[k].getGene(j).v = rand.nextDouble();
+//					}
 					double x_ti = population[k].getGene(j).x;
 
 					double v_t1i = C * population[k].getGene(j).v + C1 * r1 * (Pbest[k].point[j].x - x_ti) + C2 * r2 * (Gbest.point[j].x - x_ti);
@@ -250,7 +255,7 @@ public class PSOSearch {
 		this.maxEP = Gbest.Objective;
 		
 		System.out.println("MaximalExposure (PSOSearch) = " + maxEP);
-		
+		timeC = System.currentTimeMillis() - start;
 	}
 	
 	public Point[] RunAlgo() throws IOException{
@@ -280,7 +285,7 @@ public class PSOSearch {
 		Random R = new Random();
 		PrintWriter writer1 = null;
 		// double c = 1.2;
-		writer1 = new PrintWriter(new File("C:\\Users\\giang.dl161164\\Desktop\\BTL_TTTH_PSO\\output\\output_200.txt"));
+		writer1 = new PrintWriter(new File("/home/giang/Documents/MEP_PSO/output/output_200.txt"));
 //		writer1.write(x1 + " " + y1 + "\n");
 		writer1.write(ketqua.length + "\n");
 		for(int i = 0; i < ketqua.length; i++) {
@@ -296,8 +301,33 @@ public class PSOSearch {
 	}
 	public static void main(String[] args) throws IOException  {
 		PSOSearch app = new PSOSearch();
-//		app.init();
-		app.RunAlgo();
-		app.PrintFile();
+////		app.init();
+		PrintWriter writer2 = null;
+		String filekq = "/home/giang/Documents/MEP_PSO/ketqua.txt";
+		writer2 = new PrintWriter(new File(filekq));
+		writer2.write("filename                  result            time " + "\n");
+		String[] datas = { "10", "20", "50", "100", "200" };
+		
+		for(int i = 0; i < datas.length; i++) {
+			for(int j = 1; j <= 10; j++) {
+				filename = "/home/giang/Documents/MEP_PSO/data/data_" + datas[i] + "_" + String.valueOf(j) + ".txt";
+				
+				app.RunAlgo();
+//				app.PrintFile();
+				writer2.write("data_" + datas[i] + "_" + String.valueOf(j) + ".txt            " + maxEP + "          " + timeC + "\n");
+				System.out.println("\n-----------------------------");
+//				writer2.flush();
+			}
+		}
+		
+		writer2.flush();
+		writer2.close();
+//		
+//		
+//		PSOSearch app = new PSOSearch();
+//		filename = "/home/giang/Documents/MEP_PSO/data/data_200_6.txt"; //+ datas[i] + "_" + String.valueOf(j) + ".txt";
+//		app.RunAlgo();
+//		app.PrintFile();
+		
 	}
 }

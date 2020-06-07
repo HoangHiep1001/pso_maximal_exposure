@@ -2,7 +2,7 @@ package model;
 
 public class Sensor {
 	public Point p; 
-	public static double r;
+	public double r;
 
 	
 	public Sensor(Point p, double r) {

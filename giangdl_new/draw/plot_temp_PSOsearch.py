@@ -3,7 +3,7 @@ import numpy as np
 
 a = []
 
-fileout = open('C:\\Users\\giang.dl161164\\Desktop\\BTL_TTTH_PSO\\output\\output_temp_10.txt')
+fileout = open('/home/giang/Documents/MEP_PSO/output/output_temp_200.txt')
 
 data = fileout.read()
 lines = data.split('\n')
@@ -26,7 +26,7 @@ while it < N:
     # ve sensor network (tuong ung moi the he)
     plt.xlim(-10,110)
     plt.ylim(-10,110)
-    file = open('C:\\Users\\giang.dl161164\\Desktop\\BTL_TTTH_PSO\\data\\10.txt')
+    file = open('/home/giang/Documents/MEP_PSO/data/200.txt')
     
     data = file.read()
     lines1 = data.split('\n')
@@ -74,7 +74,7 @@ while it < N:
     print(it)
     
     # plt.show()
-    filesave = 'C:\\Users\\giang.dl161164\\Desktop\\BTL_TTTH_PSO\\output_temp_png\\' + str(it) + '.png'
+    filesave = '/home/giang/Documents/MEP_PSO/output_temp_png/200/' + str(it) + '.png'
     it = it + 1
     plt.savefig(filesave)
     plt.clf()

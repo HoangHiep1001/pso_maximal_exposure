@@ -11,14 +11,16 @@ public class Individual {
 	protected Gene[] genes;
 	protected double objective; ///
 //	Random r = new Random();
-
+//	protected Gene[] tgenes;
+	
 	// khoi tao mot ca the
 	public Individual(Objective ob) { 
 		this.ob = ob;
 		this.genes = new Gene[ob.xk.length];
+//		this.tgenes = new Gene[5000];
 		
 		Random r = new Random();
-		double randMax = 1.3;
+		double randMax = 5.3;
 		ob.xk[0] = PSOSearch.x1;
 		int kk = 0, checkk = 0;
 		double a, b;
@@ -26,6 +28,7 @@ public class Individual {
 			double rex, rey, ress, ress1 = 0;
 			do {
 				ob.xk[i] = ob.xk[i - 1] + (r.nextDouble() * 2 * randMax - randMax);
+//				ob.xk[i] = r.nextDouble() * ob.W;
 				rex = PSOSearch.x2 - ob.xk[i];
 				rey = PSOSearch.y2 - ob.yk[i];
 				ress = Math.sqrt(rex * rex + rey * rey);
@@ -38,14 +41,15 @@ public class Individual {
 //				rey = PSOSearch.y1 - ob.yk[i];
 				
 				if( ress1 + ress > PSOSearch.limitS ) {
+//					System.out.println("vao "+ (ress1 + ress) + " > " + PSOSearch.limitS);
 					kk = i;
 					checkk = 1;
 					break;
 				}
 				
-				if(checkk == 1) break;
-				
 			} while (ob.xk[i] < 0 || ob.xk[i] > ob.W);
+			
+			if(checkk == 1) break;
 		}
 		
 		if(checkk == 1 ) {
@@ -63,10 +67,11 @@ public class Individual {
 
 		for (j = 0; j < ob.xk.length-1; j++) {
 			this.genes[j] = new Gene(ob.xk[j], ob.yk[j], ob.xk[j + 1], ob.yk[j + 1], ob);
-//			System.out.println("toa do la va " + ob.xk[j]);
+//			System.out.println("toa do la va " + ob.getIP1());
 		}
 			
 		this.genes[j] = new Gene(ob.xk[j], ob.yk[j],ob);
+			
 		this.objective = getObjective();
 	}
 
@@ -79,21 +84,50 @@ public class Individual {
 		
 		double resS = 0;
 		double resX, resY, tempS;
-		double[] t11 = new double[size + 1];
-		double t111 = 0;
-		
-		for(int i = 1; i < size; i++) {
-			resX = this.genes[i + begin].x - this.genes[i + begin - 1].x;
-			resY = this.genes[i + begin].y - this.genes[i + begin - 1].y;
+		Gene[] tgenes = new Gene[50000];
+		// chia nho doan qua dai
+		double deltaS = 0.5;
+
+		int it = 0;
+
+		for(int i = 0; i < size - 1; i++) {
+			resX = this.genes[i + begin + 1].x - this.genes[i + begin].x;
+			resY = this.genes[i + begin + 1].y - this.genes[i + begin].y;
 			tempS = Math.sqrt(resX * resX + resY * resY);
 			resS += tempS;
+			int checkgenes = (int) (tempS/deltaS) + 1;
+			if(checkgenes == 1) {
+				tgenes[it] = this.genes[i + begin];
+				it++;
+			}else {
+				tgenes[it] = this.genes[i + begin];
+				it++;
+				int checkg = 1;
+				while(checkg != checkgenes) {
+					double rex = ((double) checkg/checkgenes) * resX + this.genes[i + begin].x;
+					double rey = ((double) checkg/checkgenes) * resY + this.genes[i + begin].y;
+					if (it < tgenes.length)
+						tgenes[it] = new Gene(rex, rey, ob);
+					it++;
+					checkg++;
+				}
+				
+			}
+		}
+		
+		tgenes[it] = this.genes[size - 1];
+		
+		double[] t11 = new double[it + 1];
+		double t111 = 0;
+//		resS = 0;
+		for(int i = 1; i <= it; i++) {
+			resX = tgenes[i + begin].x - tgenes[i + begin - 1].x;
+			resY = tgenes[i + begin].y - tgenes[i + begin - 1].y;
+			tempS = Math.sqrt(resX * resX + resY * resY);
+//			resS += tempS;
 			t11[i] = tempS/PSOSearch.speed;
 			t111 += t11[i];
 		}
-		
-//		double t11 = resS/PSOSearch.speed;
-//		double timeM = PSOSearch.limitTime - t11;
-//		t11 = Objective.dx/PSOSearch.speed;
 		
 //		System.out.println("qduong = "+ resS);
 		if( resS > PSOSearch.limitS ) return 0;
@@ -101,9 +135,10 @@ public class Individual {
 		
 		double res = 0, tempp = 0, tmax = 0, kkk = 0;
 		
-		for (int i = 1; i < size; i++) {
-			tempp = this.genes[i + begin].ip;
+		for (int i = 1; i <= it; i++) {
+			tempp = tgenes[i + begin].ip;
 			res += tempp;
+//			System.out.println("tung cai la " + tempp);
 			if( tmax < tempp ) {
 				tmax = tempp;
 				kkk = i;
@@ -113,12 +148,13 @@ public class Individual {
 		double IP = res - tmax;
 //		value = IP * t11 + tmax * timeM;
 		
-		for(int i = 1; i < size; i++) {
+		for(int i = 1; i <= it; i++) {
 			if( i == kkk ) continue;
-			value += this.genes[i + begin].ip * t11[i];
+			value += tgenes[i + begin].ip * t11[i];
 		}
 		
 		value = value + tmax * (PSOSearch.limitTime - t111);
+//		System.out.println("thoi gian thua la " + (tmax));
 				
 		return value;
 	}
